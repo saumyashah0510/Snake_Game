@@ -68,3 +68,13 @@ This is a terminal based snake game implemented in C++. It features different le
     ```sh
     ./my_version
    
+<hr>
+
+## How to play:
+1. **Choose a difficulty level** (1.Easy, 2.Medium, 3.Hard)
+2. **Control the snake** using `W`, `A`, `S`, `D`
+3. **Avoid the walls** (Also the obstacles (#) in hard mode)
+4. **Eat fruits** (@ symbol) to grow
+5. **Press `P` to pause** the game
+6. **If the snake collides** with itself or an obstacle (in Hard mode), the game ends.
+7. **After Game Over, restart or exit**.
