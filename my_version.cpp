@@ -245,7 +245,7 @@ public:
         char key = getKeyPress();
         if(key)
         {
-            if(key == 'p')
+            if(key == 'p' || key == 'P')
             {
                 pause = !pause;
                 if(pause)
@@ -256,7 +256,7 @@ public:
                     {
                         key = getKeyPress();
                         {
-                            if(key == 'p')
+                            if(key == 'p' || key == 'P')
                             {
                                 pause = false;
                             }
@@ -265,15 +265,15 @@ public:
                 }
             }
 
-            if (direction == ' ' && (key == 'w' || key == 's' || key == 'a' || key == 'd'))
+            if (direction == ' ' && (key == 'w' || key == 's' || key == 'a' || key == 'd' || key == 'W' || key == 'S' || key == 'A' || key == 'D'))
             {
                 // Start moving once the first key is pressed
                 direction = key;
             }
-            else if ((key == 'w' && direction != 's') ||
-                     (key == 's' && direction != 'w') ||
-                     (key == 'a' && direction != 'd') ||
-                     (key == 'd' && direction != 'a'))
+            else if (((key == 'w' || key == 'W') && (direction != 's' && direction != 'S')) ||
+                     (key == 's' || key == 'S') && (direction != 'w' && direction != 'W') ||
+                     (key == 'a' || key == 'A') && (direction != 'd' && direction != 'D') ||
+                     (key == 'd' || key == 'D') && (direction != 'a' && direction != 'A'))
             {
                 direction = key;
             }
@@ -295,15 +295,27 @@ public:
         case 'w':
             snake_Y[0]--;
             break;
+        case 'W':
+            snake_Y[0]--;
+            break;
         case 's':
             snake_Y[0]++;
             break;
+        case 'S':
+            snake_Y[0]++;
+            break;    
         case 'a':
             snake_X[0]--;
             break;
+        case 'A':
+            snake_X[0]--;
+            break;    
         case 'd':
             snake_X[0]++;
             break;
+        case 'D':
+            snake_X[0]++;
+            break;    
         }
 
         // Check collision with walls
@@ -387,12 +399,12 @@ public:
         {
             cout << "Do you want to play again?" << endl << "Press 'y' to play again and 'n' to exit" << endl;
             cin >> restart;
-            if(restart == 'y')
+            if(restart == 'y' || restart == 'Y')
             {
                 Initialize(d);
                 Run(d);
             }
-            else if(restart == 'n')
+            else if(restart == 'n' || restart == 'N')
             {
                 cout << "Thanks for playing.";
             }
@@ -400,7 +412,7 @@ public:
             {
                 cout << "Please enter correct input" << endl;
             }
-        } while(restart != 'y' && restart != 'n');
+        } while(restart != 'y' && restart != 'n' && restart != 'Y' && restart != 'N');
 
             #if !defined(_WIN32) && !defined(_WIN64)
                 endwin();
