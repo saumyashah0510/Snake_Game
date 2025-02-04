@@ -1,3 +1,3 @@
 # Snake_Game
 Hello
-i am saumya.
+I am Saumya.
