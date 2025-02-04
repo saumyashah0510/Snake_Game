@@ -41,6 +41,8 @@ This is a terminal based snake game implemented in C++. It features different le
 - A C++ compiler (MinGW or MSVC)
 - ncurses library (Linux\MacOS only)
 
+<hr>
+
 #### On Windows:
 1. **Open a terminal** (Command Prompt or Powershell)
 2. **Navigate to the path where file is located**
@@ -50,6 +52,8 @@ This is a terminal based snake game implemented in C++. It features different le
 4. **Run the game**
     ```sh
     my_version.exe    
+
+<hr>
 
 #### On Linux\MacOS:
 1. **Install ncurses** if not installed:
@@ -63,5 +67,4 @@ This is a terminal based snake game implemented in C++. It features different le
 4. **Run the game**
     ```sh
     ./my_version
-
-<Uses #### for subheadings and triple backticks (```sh) for code blocks.>    
+   
