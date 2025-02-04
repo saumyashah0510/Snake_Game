@@ -14,7 +14,7 @@ This is a terminal based snake game implemented in C++. It features different le
 - [Features](#features)
 - [Installation](#installation)
 - [How to play](#how-to-play)
-- [License] (#License)
+- [License](#License)
 
 ## Features:
 
