@@ -1,7 +1,7 @@
 # Snake Game (C++)
 
 ## Description:
-This is a terminal based snake game implemented in C++. It features different levels and runs on both Windows and Linux/MacOS. 
+This is a terminal based snake game implemented in C++. It features different levels and runs on both Windows and Linux\MacOS. 
 <br>
 
 ## Team: Silicon Syndicates
@@ -12,14 +12,19 @@ This is a terminal based snake game implemented in C++. It features different le
 
 ## Features:
 
-- OS Independent:
+- **OS Independent:**
     - Works on both Windows and Linux\MacOS.
 
-- Multiple Game Modes:
+- **Multiple Game Modes:**
     - Easy (Slow Speed)
     - Medium (Medium Speed)
     - Fast (Fast Speed and obstacles)
 
+- **Game controls:**
+    - `W` - Up
+    - `A` - Left
+    - `S` - Down
+    - `D` - Right
 
 
 
