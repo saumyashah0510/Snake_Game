@@ -10,6 +10,12 @@ This is a terminal based snake game implemented in C++. It features different le
 202004030 - Pranshu Vaghani <br>
 202404017 - Krishh Agrawal <br>
 
+## Table of Contents:
+- [Features](#features)
+- [Installation](#installation)
+- [How to play](#how-to-play)
+- [License] (#License)
+
 ## Features:
 
 - **OS Independent:**
@@ -78,3 +84,6 @@ This is a terminal based snake game implemented in C++. It features different le
 5. **Press `P` to pause** the game
 6. **If the snake collides** with itself or an obstacle (in Hard mode), the game ends.
 7. **After Game Over, restart or exit**.
+
+## License:
+This project is open-source and can be modified as needed.
