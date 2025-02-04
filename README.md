@@ -5,10 +5,10 @@ This is a terminal based snake game implemented in C++. It features different le
 <br>
 
 ## Team: Silicon Syndicates
-202401472 - Saumya Shah
-202404038 - Manav Shah
-202004030 - Pranshu Vaghani
-202404017 - Krishh Agrawal
+202401472 - Saumya Shah <br>
+202404038 - Manav Shah  <br>
+202004030 - Pranshu Vaghani <br>
+202404017 - Krishh Agrawal <br>
 
 ## Features:
 
