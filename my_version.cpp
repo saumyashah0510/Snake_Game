@@ -34,7 +34,7 @@ private:
     int powerupX, powerupY;
     bool powerup = false;
     int powerup_timer = 0;
-    int powerup_duration = 3500;
+    int powerup_duration = 4500;
 
     bool gameOver;
     bool pause = false;
@@ -382,7 +382,7 @@ public:
             powerupX = rand() % (WIDTH - 4) + 2;
             powerupY = rand() % (HEIGHT - 4) + 2;
             powerup = true;
-            powerup_duration = 3500;
+            powerup_duration = 4500;
             powerup_timer = rand() % 15 + 15; // Reset spawn timer
         }
 
