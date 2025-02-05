@@ -19,6 +19,9 @@ This is a terminal based snake game implemented in C++. It features different le
 
 ## Features:
 
+- **Modular**
+    - Fully modular code which consists of files like logic.cpp , grid.cpp etc. which have the codes for the different functions used for making the game.
+
 - **OS Independent:**
     - Works on both Windows and Linux\MacOS.
     - Colours are only displayed in Windows.
@@ -34,6 +37,9 @@ This is a terminal based snake game implemented in C++. It features different le
     - `S` - Down
     - `D` - Right
     - `P` - Pause\Resume
+
+- **High Score**
+    - A function that displays the maximum score achieved during a session, with the score resetting each time the program is run.   
 
 - **Obstacles:**
     - Randomly placed obstacles (#) (only in hard mode) that end the game if hit.
@@ -61,6 +67,8 @@ This is a terminal based snake game implemented in C++. It features different le
 3) **Linked List** (for the Snake's Body)
 
 4) **Arrays** (for Fruits, Obstacles, and Power-Ups)
+
+5) **Making the code modular**
 
 ## Installation
 
