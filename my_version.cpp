@@ -283,9 +283,9 @@ public:
         cout << "Score: " << max(0, snakeLength - 3) << endl;
 #else
         clear();
-        color(5);
-        mvprintw(0, 0, "Welcome to snake game!!");
-        mvprintw(1, 0, "Use 'wasd' for controlling the snake and 'p' to pause");
+        attron(COLOR_PAIR(5));
+        mvprintw(0, 0, "Welcome to Snake Game!!");
+        mvprintw(1, 0, "Use 'WASD' to control the snake and 'P' to pause");
 
         for (int i = 0; i < HEIGHT; i++)
         {
@@ -293,27 +293,31 @@ public:
             {
                 if (i == 0 || i == HEIGHT - 1 || j == 0 || j == WIDTH - 1)
                 {
-                    color(3);
+                    attron(COLOR_PAIR(3));
                     mvprintw(i + 2, j, "*"); // Border
+                    attroff(COLOR_PAIR(3));
                 }
                 else if (i == head->y && j == head->x)
                 {
-                    color(10);
+                    attron(COLOR_PAIR(10));
                     mvprintw(i + 2, j, "O"); // Snake head
+                    attroff(COLOR_PAIR(10));
                 }
                 else if ((i == fruitY1 && j == fruitX1) ||
                          (i == fruitY2 && j == fruitX2) ||
                          (i == fruitY3 && j == fruitX3))
                 {
-                    color(4);
+                    attron(COLOR_PAIR(4));
                     mvprintw(i + 2, j, "@"); // Fruit
+                    attroff(COLOR_PAIR(4));
                 }
                 else if ((i == obstacleY1 && j == obstacleX1) ||
                          (i == obstacleY2 && j == obstacleX2) ||
                          (i == obstacleY3 && j == obstacleX3))
                 {
-                    color(8);
+                    attron(COLOR_PAIR(8));
                     mvprintw(i + 2, j, "#"); // Obstacles
+                    attroff(COLOR_PAIR(8));
                 }
                 else
                 {
@@ -323,8 +327,9 @@ public:
                     {
                         if (temp->x == j && temp->y == i)
                         {
-                            color(10);
+                            attron(COLOR_PAIR(10));
                             mvprintw(i + 2, j, "o"); // Snake body
+                            attroff(COLOR_PAIR(10));
                             isBodyPart = true;
                             break;
                         }
@@ -338,8 +343,9 @@ public:
                         {
                             if (powerupActive[k] && i == powerupY[k] && j == powerupX[k])
                             {
-                                color(14);               // Yellow color for power-ups
+                                attron(COLOR_PAIR(14));  // Yellow color for power-ups
                                 mvprintw(i + 2, j, "$"); // Power-up symbol
+                                attroff(COLOR_PAIR(14));
                                 isPowerup = true;
                                 break;
                             }
@@ -352,8 +358,11 @@ public:
                 }
             }
         }
-        color(6);
-        mvprintw(HEIGHT + 2, 0, "Score: %d", max(0, snakeLength - 3));
+
+        attron(COLOR_PAIR(6));
+        mvprintw(HEIGHT + 2, 0, "Score: %d", std::max(0, snakeLength - 3));
+        attroff(COLOR_PAIR(6));
+
         refresh();
 #endif
     }
@@ -569,7 +578,7 @@ public:
             }
             else if (d == '3')
             {
-                sleep_for(20);
+                sleep_for(30);
             }
         }
         color(9);
