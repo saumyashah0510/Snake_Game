@@ -8,6 +8,10 @@ void SnakeGame ::Grid()
     color(5);
     cout << "Welcome to snake game!!" << endl;
     cout << "Use 'wasd' for controlling the snake and 'p' to pause" << endl;
+    cout << " '@' are fruits and eating them will increase the length of the snake and score by 1." << endl;
+    cout << " '+' are powerups and eating them will increase your score by 3 points. " << endl;
+    cout << " '-' are bombs and eating them will decrease your score by 1 point. " << endl;
+    cout << "You lose either when you hit walls/obstacles or when your score goes below zero." << endl; 
 
     for (int i = 0; i < HEIGHT; i++)
     {
