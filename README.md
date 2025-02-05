@@ -39,6 +39,12 @@ This is a terminal based snake game implemented in C++. It features different le
 - **Fruits:**
     - Randomly placed fruits that increases the snake length and score if hit.
 
+- **Power-UP**
+    - Randomly placed powerups(+) that increase your score by 3 if eaten.  
+
+- **Bombs** 
+    - Randomly placed bombs(-) that decrease your score by 1 if eaten.        
+
 - **Game Over and restart options**    
 
 ## Installation
