@@ -47,6 +47,13 @@ This is a terminal based snake game implemented in C++. It features different le
 
 - **Game Over and restart options**    
 
+## Programming concepts to Use:
+
+1) **Classes**(Encapsulation and Data Hiding)
+    - Class used: Snake Game
+        - Private members (head, direction, gameOver, etc.) prevent direct access from outside the class.
+        - Public methods (Initialize(), Run(), etc.) control access to game logic.
+
 ## Installation
 
 ### Pre-requisites
