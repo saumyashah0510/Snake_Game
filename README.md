@@ -20,7 +20,7 @@ This is a terminal based snake game implemented in C++. It features different le
 ## Features:
 
 - **Modular**
-    - Fully modular code which consists of files like logic.cpp , grid.cpp etc. which have the codes for the different functions used for making the game.
+    - Fully modular code with separate files such as logic.cpp, grid.cpp, etc., each containing functions dedicated to different aspects of the game.
 
 - **OS Independent:**
     - Works on both Windows and Linux\MacOS.
