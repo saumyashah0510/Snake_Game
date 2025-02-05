@@ -25,6 +25,7 @@ This is a terminal based snake game implemented in C++. It features different le
 - **OS Independent:**
     - Works on both Windows and Linux\MacOS.
     - Colours and background music are only displayed in Windows.
+    - ***It is preferable to run this on Windows.***
 
 - **Multiple Game Modes:**
     - Easy (Slow Speed)
