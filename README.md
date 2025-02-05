@@ -75,10 +75,10 @@ This is a terminal based snake game implemented in C++. It features different le
 2. **Navigate to the path where file is located**
 3. **Compile the code using**:<br>
     ```sh 
-    g++ my_version.cpp -o my_version.exe -lwinmm
+    g++ -o snake_game main.cpp logic.cpp snake_game.cpp grid.cpp input.cpp run.cpp utility.cpp -lwinmm
 4. **Run the game**
     ```sh
-    my_version.exe    
+    snake_game.exe   
 
 <hr>
 
@@ -90,10 +90,10 @@ This is a terminal based snake game implemented in C++. It features different le
 2. **Navigate to the path where file is located**
 3. **Compile the code:**
     ```sh
-    g++my_version.cpp -omy_version -lncurses
+    g++ -o snake_game main.cpp logic.cpp snake_game.cpp grid.cpp input.cpp run.cpp utility.cpp -lncurses
 4. **Run the game**
     ```sh
-    ./my_version
+    ./snake_game
    
 <hr>
 
