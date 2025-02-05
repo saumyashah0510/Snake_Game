@@ -103,6 +103,7 @@ This is a terminal based snake game implemented in C++. It features different le
 4. **Eat fruits** (@ symbol) to grow
 5. **Press `P` to pause** the game
 6. **If the snake collides** with itself or an obstacle (in Hard mode), the game ends.
+7. **If your score goes below 0, the game ends.**
 7. **After Game Over, restart or exit**.
 
 ## License:
