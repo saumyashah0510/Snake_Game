@@ -1,4 +1,4 @@
-#include  "snake_game.h"
+#include "snake_game.h"
 using namespace std;
 
 void SnakeGame ::Grid()
@@ -146,26 +146,33 @@ void SnakeGame ::Grid()
                     {
                         if (powerupActive[k] && i == powerupY[k] && j == powerupX[k])
                         {
-                            attron(COLOR_PAIR(14));  // Yellow color for power-ups
-                            mvprintw(i + 2, j, "$"); // Power-up symbol
-                            attroff(COLOR_PAIR(14));
+                            // Draw power-up symbol
+                            if (k == 0)
+                            {
+                                // Draw + for the first power-up
+                                attron(COLOR_PAIR(POWERUP_COLOR));
+                                mvprintw(i + 2, j, "+");
+                                attroff(COLOR_PAIR(POWERUP_COLOR));
+                            }
+                            else
+                            {
+                                // Draw - for the other power-ups
+                                attron(COLOR_PAIR(POWERUP_COLOR));
+                                mvprintw(i + 2, j, "-");
+                                attroff(COLOR_PAIR(POWERUP_COLOR));
+                            }
                             isPowerup = true;
                             break;
                         }
                     }
-                    if (!isPowerup)
-                    {
-                        mvprintw(i + 2, j, " "); // Empty space
-                    }
                 }
             }
         }
-    }
 
-    attron(COLOR_PAIR(6));
-    mvprintw(HEIGHT + 2, 0, "Score: %d", std::max(0, snakeLength - 3));
-    attroff(COLOR_PAIR(6));
+        attron(COLOR_PAIR(6));
+        mvprintw(HEIGHT + 2, 0, "Score: %d", std::max(0, snakeLength - 3));
+        attroff(COLOR_PAIR(6));
 
-    refresh();
+        refresh();
 #endif
 }
