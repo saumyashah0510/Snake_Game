@@ -31,10 +31,22 @@ private:
     int obstacleX2, obstacleY2;
     int obstacleX3, obstacleY3;
 
-    int powerupX, powerupY;
-    bool powerup = false;
-    int powerup_timer = 0;
-    int powerup_duration = 4500;
+    int powerup1X, powerup1Y;
+    int powerup2X, powerup2Y;
+    int powerup3X, powerup3Y;
+    int powerup4X, powerup4Y;
+    bool powerup1 = false;
+    bool powerup2 = false;
+    bool powerup3 = false;
+    bool powerup4 = false;
+    int powerup1_timer = 0;
+    int powerup2_timer = 0;
+    int powerup3_timer = 0;
+    int powerup4_timer = 0;
+    int powerup1_duration = 4500;
+    int powerup2_duration = 4600;
+    int powerup3_duration = 4750;
+    int powerup4_duration = 5000;
 
     bool gameOver;
     bool pause = false;
@@ -80,8 +92,14 @@ public:
         }
 
         // reset power up
-        powerup = true;
-        powerup_timer = rand() % 16 + 15;
+        powerup1 = true;
+        powerup2 = true;
+        powerup3 = true;
+        powerup4 = true;
+        powerup1_timer = rand() % 16 + 30;
+        powerup2_timer = rand() % 16 + 10;
+        powerup3_timer = rand() % 16 + 12;
+        powerup4_timer = rand() % 16 + 14;
 
 #if defined(_WIN32) || defined(_WIN64)
         // No additional setup required for Windows
@@ -148,10 +166,26 @@ public:
                     color(3);
                     cout << "*"; // Obstacles
                 }
-                else if (powerup == true && i == powerupY && j == powerupX)
+                else if (powerup1 == true && i == powerup1Y && j == powerup1X)
                 {
                     color(6);
                     cout << "+";
+                }
+                else if (powerup2 == true && i == powerup2Y && j == powerup2X)
+                {
+                    color(6);
+                    cout << "-";
+                }
+                else if (powerup3 == true && i == powerup3Y && j == powerup3X)
+                {
+                    color(6);
+                    cout << "-";
+                }
+
+                else if (powerup4 == true && i == powerup4Y && j == powerup4X)
+                {
+                    color(6);
+                    cout << "-";
                 }
                 else
                 {
@@ -173,7 +207,7 @@ public:
             cout << endl;
         }
         color(6);
-        cout << "Score: " << snakeLength - 1 << endl;
+        cout << "Score: " << max(0, snakeLength - 1) << endl;
 
 #else // For Linux (Using ncurses)
         clear(); // Clear screen in Linux
@@ -229,7 +263,7 @@ public:
         }
 
         color(6);
-        mvprintw(HEIGHT + 2, 0, "Score: %d", snakeLength - 1);
+        mvprintw(HEIGHT + 2, 0, "Score: %d", max(0, snakeLength - 1));
 
         refresh(); // Refresh screen after drawing everything
 #endif
@@ -332,6 +366,11 @@ public:
             break;
         }
 
+        if (snakeLength <= 0)
+        {
+            gameOver = true;
+        }
+
         // Check collision with walls
         if (snake_X[0] == 0 || snake_X[0] == WIDTH - 1 || snake_Y[0] == 0 || snake_Y[0] == HEIGHT - 1)
             gameOver = true;
@@ -377,30 +416,96 @@ public:
         }
 
         // Power-up mechanics
-        if (powerup_timer <= 0 && powerup == false)
+        if (powerup1_timer <= 0 && powerup1 == false)
         {
-            powerupX = rand() % (WIDTH - 4) + 2;
-            powerupY = rand() % (HEIGHT - 4) + 2;
-            powerup = true;
-            powerup_duration = 4500;
-            powerup_timer = rand() % 15 + 15; // Reset spawn timer
+            powerup1X = rand() % (WIDTH - 4) + 2;
+            powerup1Y = rand() % (HEIGHT - 4) + 2;
+            powerup1 = true;
+            powerup1_duration = 4500;
+            powerup1_timer = rand() % 15 + 30; // Reset spawn timer
+        }
+        if (powerup2_timer <= 0 && powerup2 == false)
+        {
+            powerup2X = rand() % (WIDTH - 4) + 2;
+            powerup2Y = rand() % (HEIGHT - 4) + 2;
+            powerup2 = true;
+            powerup2_duration = 4500;
+            powerup2_timer = rand() % 15 + 10; // Reset spawn timer
+        }
+        if (powerup3_timer <= 0 && powerup3 == false)
+        {
+            powerup3X = rand() % (WIDTH - 4) + 2;
+            powerup3Y = rand() % (HEIGHT - 4) + 2;
+            powerup3 = true;
+            powerup3_duration = 4500;
+            powerup3_timer = rand() % 15 + 12; // Reset spawn timer
+        }
+        if (powerup4_timer <= 0 && powerup4 == false)
+        {
+            powerup4X = rand() % (WIDTH - 4) + 2;
+            powerup4Y = rand() % (HEIGHT - 4) + 2;
+            powerup4 = true;
+            powerup4_duration = 4500;
+            powerup4_timer = rand() % 15 + 14; // Reset spawn timer
         }
 
-        if (powerup == true)
+        if (powerup1 == true)
         {
-            powerup_duration = powerup_duration - 100;
-            if (powerup_duration <= 0)
+            powerup1_duration = powerup1_duration - 100;
+            if (powerup1_duration <= 0)
             {
-                powerup = false; // Remove power-up from screen
+                powerup1 = false; // Remove power-up from screen
+            }
+        }
+        if (powerup2 == true)
+        {
+            powerup2_duration = powerup2_duration - 100;
+            if (powerup2_duration <= 0)
+            {
+                powerup2 = false; // Remove power-up from screen
+            }
+        }
+        if (powerup3 == true)
+        {
+            powerup3_duration = powerup3_duration - 100;
+            if (powerup3_duration <= 0)
+            {
+                powerup3 = false; // Remove power-up from screen
+            }
+        }
+        if (powerup4 == true)
+        {
+            powerup4_duration = powerup4_duration - 100;
+            if (powerup4_duration <= 0)
+            {
+                powerup4 = false; // Remove power-up from screen
             }
         }
 
-        if (powerup == true && snake_X[0] == powerupX && snake_Y[0] == powerupY)
+        if (powerup1 == true && snake_X[0] == powerup1X && snake_Y[0] == powerup1Y)
         {
             snakeLength += 3; // Increase score by 3
-            powerup = false;  // Remove power-up
+            powerup1 = false; // Remove power-up
         }
-        powerup_timer--;
+        powerup1_timer--;
+        if (powerup2 == true && snake_X[0] == powerup2X && snake_Y[0] == powerup2Y)
+        {
+            snakeLength -= 1;
+            powerup2 = false; // Remove power-up
+        }
+        powerup2_timer--;
+        if (powerup3 == true && snake_X[0] == powerup3X && snake_Y[0] == powerup3Y)
+        {
+            snakeLength -= 1;
+            powerup3 = false; // Remove power-up
+        }
+        powerup3_timer--;
+        if (powerup4 == true && snake_X[0] == powerup4X && snake_Y[0] == powerup4Y)
+        {
+            snakeLength -= 1;
+            powerup4 = false; // Remove power-up
+        }
+        powerup4_timer--;
     }
 
     void Run(char d)
