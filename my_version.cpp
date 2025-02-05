@@ -42,6 +42,7 @@ private:
 
     node *head;
     int snakeLength;
+    int high_score=0;
 
     int fruitX1, fruitY1;
     int fruitX2, fruitY2;
@@ -506,6 +507,12 @@ public:
             }
         }
 
+        //check highscore
+        if(snakeLength-3 > high_score)
+        {
+            high_score = snakeLength-3;
+        }
+
         // Check collision with walls
         if (head->x == 0 || head->x == WIDTH - 1 || head->y == 0 || head->y == HEIGHT - 1)
             gameOver = true;
@@ -585,7 +592,8 @@ public:
         }
         color(9);
         cout << "Game Over!" << endl;
-        cout << "Your final score was " << snakeLength-3 << endl;
+        cout << "Your final score was " << max(0,snakeLength-3) << endl;
+        cout << "High score: " << high_score <<endl;
         color(7);
 
         // Restart
