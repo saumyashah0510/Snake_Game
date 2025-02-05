@@ -17,10 +17,28 @@ using namespace std;
 class SnakeGame
 {
 private:
+    struct node
+    {
+        node *next;
+        int x, y;
+
+        node()
+        {
+            this->next = NULL;
+        }
+
+        node(int x, int y)
+        {
+            this->x = x;
+            this->y = y;
+            this->next = NULL;
+        }
+    };
+
     static const int WIDTH = 60;
     static const int HEIGHT = 15;
 
-    int snake_X[450], snake_Y[450]; // Arrays to hold snake body positions
+    node *head;
     int snakeLength;
 
     int fruitX1, fruitY1;
@@ -31,75 +49,125 @@ private:
     int obstacleX2, obstacleY2;
     int obstacleX3, obstacleY3;
 
-    int powerup1X, powerup1Y;
-    int powerup2X, powerup2Y;
-    int powerup3X, powerup3Y;
-    int powerup4X, powerup4Y;
-    bool powerup1 = false;
-    bool powerup2 = false;
-    bool powerup3 = false;
-    bool powerup4 = false;
-    int powerup1_timer = 0;
-    int powerup2_timer = 0;
-    int powerup3_timer = 0;
-    int powerup4_timer = 0;
-    int powerup1_duration = 4500;
-    int powerup2_duration = 4600;
-    int powerup3_duration = 4750;
-    int powerup4_duration = 5000;
+    int powerupX[4], powerupY[4];
+    bool powerupActive[4];
+    int powerupTimer[4];
+    int powerupDuration[4];
 
     bool gameOver;
-    bool pause = false;
+    bool pause;
 
     char direction; // 'w' = up, 's' = down, 'a' = left, 'd' = right, 'p' = pause
 
 public:
     SnakeGame(char difficulty)
     {
+        head = NULL;
         Initialize(difficulty);
+    }
+
+    ~SnakeGame()
+    {
+        // Clean up the snake's linked list
+        while (head != NULL)
+        {
+            node *temp = head;
+            head = head->next;
+            delete temp;
+        }
     }
 
     void Initialize(char d)
     {
         gameOver = false;
-        direction = ' ';
-        snakeLength = 1;
-        snake_X[0] = WIDTH / 2;
-        snake_Y[0] = HEIGHT / 2;
+        direction = 'd';
+        snakeLength = 3;
 
-        srand(time(0)); // random positions every run
+        // Initialize snake
+        head = new node(WIDTH / 2, HEIGHT / 2);
+        head->next = new node(WIDTH / 2, HEIGHT / 2 + 1);
+        head->next->next = new node(WIDTH / 2, HEIGHT / 2 + 2);
 
-        // Random fruit position
+        srand(time(0)); // Random positions every run
+
+        // Random fruit positions
+        // Generate the first obstacle
         fruitX1 = rand() % (WIDTH - 4) + 2;
         fruitY1 = rand() % (HEIGHT - 4) + 2;
-
-        fruitX2 = rand() % (WIDTH - 4) + 2;
-        fruitY2 = rand() % (HEIGHT - 4) + 2;
-
-        fruitX3 = rand() % (WIDTH - 4) + 2;
-        fruitY3 = rand() % (HEIGHT - 4) + 2;
-
-        if (d == '3')
+        // Ensure obstacle is not near the snake's starting area
+        while (abs(fruitX1 - WIDTH / 2) < 3 && abs(fruitY1 - HEIGHT / 2) < 3)
         {
-            obstacleX1 = rand() % (WIDTH - 4) + 2;
-            obstacleY1 = rand() % (HEIGHT - 4) + 2;
-
-            obstacleX2 = rand() % (WIDTH - 4) + 2;
-            obstacleY2 = rand() % (HEIGHT - 4) + 2;
-
-            obstacleX3 = rand() % (WIDTH - 4) + 2;
-            obstacleY3 = rand() % (HEIGHT - 4) + 2;
+            fruitX1 = rand() % (WIDTH - 4) + 2;
+            fruitY1 = rand() % (HEIGHT - 4) + 2;
         }
 
-        // reset power up
-        powerup1 = true;
-        powerup2 = true;
-        powerup3 = true;
-        powerup4 = true;
-        powerup1_timer = rand() % 16 + 30;
-        powerup2_timer = rand() % 16 + 10;
-        powerup3_timer = rand() % 16 + 12;
-        powerup4_timer = rand() % 16 + 14;
+        // Generate the second obstacle
+        fruitX2 = rand() % (WIDTH - 4) + 2;
+        fruitY2 = rand() % (HEIGHT - 4) + 2;
+        // Ensure the second obstacle is not near the snake's starting area and also not too close to the first one
+        while ((abs(fruitX2 - WIDTH / 2) < 3 && abs(fruitY2 - HEIGHT / 2) < 3) ||
+               (abs(fruitX2 - obstacleX1) < 3 && abs(fruitY2 - obstacleY1) < 3))
+        {
+            fruitX2 = rand() % (WIDTH - 4) + 2;
+            fruitY2 = rand() % (HEIGHT - 4) + 2;
+        }
+
+        // Generate the third obstacle
+        fruitX3 = rand() % (WIDTH - 4) + 2;
+        fruitY3 = rand() % (HEIGHT - 4) + 2;
+        // Ensure the third obstacle is not near the snake's starting area and not too close to the other obstacles
+        while ((abs(fruitX3 - WIDTH / 2) < 3 && abs(fruitY3 - HEIGHT / 2) < 3) ||
+               (abs(fruitX3 - obstacleX1) < 3 && abs(fruitY3 - obstacleY1) < 3) ||
+               (abs(fruitX3 - obstacleX2) < 3 && abs(fruitY3 - obstacleY2) < 3))
+        {
+            fruitX3 = rand() % (WIDTH - 4) + 2;
+            fruitY3 = rand() % (HEIGHT - 4) + 2;
+        }
+
+        // Avoid placing obstacles near the snake
+        if (d == '3') // Hard mode with obstacles
+        {
+            // Generate the first obstacle
+            obstacleX1 = rand() % (WIDTH - 4) + 2;
+            obstacleY1 = rand() % (HEIGHT - 4) + 2;
+            // Ensure obstacle is not near the snake's starting area
+            while (abs(obstacleX1 - WIDTH / 2) < 3 && abs(obstacleY1 - HEIGHT / 2) < 3)
+            {
+                obstacleX1 = rand() % (WIDTH - 4) + 2;
+                obstacleY1 = rand() % (HEIGHT - 4) + 2;
+            }
+
+            // Generate the second obstacle
+            obstacleX2 = rand() % (WIDTH - 4) + 2;
+            obstacleY2 = rand() % (HEIGHT - 4) + 2;
+            // Ensure the second obstacle is not near the snake's starting area and also not too close to the first one
+            while ((abs(obstacleX2 - WIDTH / 2) < 3 && abs(obstacleY2 - HEIGHT / 2) < 3) ||
+                   (abs(obstacleX2 - obstacleX1) < 3 && abs(obstacleY2 - obstacleY1) < 3))
+            {
+                obstacleX2 = rand() % (WIDTH - 4) + 2;
+                obstacleY2 = rand() % (HEIGHT - 4) + 2;
+            }
+
+            // Generate the third obstacle
+            obstacleX3 = rand() % (WIDTH - 4) + 2;
+            obstacleY3 = rand() % (HEIGHT - 4) + 2;
+            // Ensure the third obstacle is not near the snake's starting area and not too close to the other obstacles
+            while ((abs(obstacleX3 - WIDTH / 2) < 3 && abs(obstacleY3 - HEIGHT / 2) < 3) ||
+                   (abs(obstacleX3 - obstacleX1) < 3 && abs(obstacleY3 - obstacleY1) < 3) ||
+                   (abs(obstacleX3 - obstacleX2) < 3 && abs(obstacleY3 - obstacleY2) < 3))
+            {
+                obstacleX3 = rand() % (WIDTH - 4) + 2;
+                obstacleY3 = rand() % (HEIGHT - 4) + 2;
+            }
+        }
+
+        // Initialize power-ups
+        for (int i = 0; i < 4; i++)
+        {
+            powerupActive[i] = true;
+            powerupTimer[i] = rand() % 16 + 10;
+            powerupDuration[i] = 4500;
+        }
 
 #if defined(_WIN32) || defined(_WIN64)
         // No additional setup required for Windows
@@ -132,8 +200,8 @@ public:
 
     void Grid()
     {
-#if defined(_WIN32) || defined(_WIN64) // For Windows
-        clearScreen();                 // Clear the screen on Windows
+#if defined(_WIN32) || defined(_WIN64)
+        clearScreen();
         color(5);
         cout << "Welcome to snake game!!" << endl;
         cout << "Use 'wasd' for controlling the snake and 'p' to pause" << endl;
@@ -147,10 +215,10 @@ public:
                     color(3);
                     cout << "*"; // Border
                 }
-                else if (i == snake_Y[0] && j == snake_X[0])
+                else if (i == head->y && j == head->x)
                 {
                     color(10);
-                    cout << "O"; // Snake head
+                    cout << "X"; // Snake head
                 }
                 else if ((i == fruitY1 && j == fruitX1) ||
                          (i == fruitY2 && j == fruitX2) ||
@@ -166,51 +234,55 @@ public:
                     color(3);
                     cout << "*"; // Obstacles
                 }
-                else if (powerup1 == true && i == powerup1Y && j == powerup1X)
-                {
-                    color(6);
-                    cout << "+";
-                }
-                else if (powerup2 == true && i == powerup2Y && j == powerup2X)
-                {
-                    color(6);
-                    cout << "-";
-                }
-                else if (powerup3 == true && i == powerup3Y && j == powerup3X)
-                {
-                    color(6);
-                    cout << "-";
-                }
-
-                else if (powerup4 == true && i == powerup4Y && j == powerup4X)
-                {
-                    color(6);
-                    cout << "-";
-                }
                 else
                 {
                     bool isBodyPart = false;
-                    for (int k = 1; k < snakeLength; k++)
+                    node *temp = head->next;
+                    while (temp != NULL)
                     {
-                        if (snake_X[k] == j && snake_Y[k] == i)
+                        if (temp->x == j && temp->y == i)
                         {
                             color(10);
-                            cout << "O"; // Snake body
+                            cout << "o"; // Snake body
                             isBodyPart = true;
                             break;
                         }
+                        temp = temp->next;
                     }
                     if (!isBodyPart)
-                        cout << " ";
+                    {
+                        // Draw power-ups
+                        bool isPowerup = false;
+                        if (powerupActive[0] && i == powerupY[0] && j == powerupX[0])
+                        {
+                            color(14);   // Yellow color for power-ups
+                            cout << "+"; // Power-up symbol
+                            isPowerup = true;
+                            break;
+                        }
+                        for (int k = 1; k < 4; k++)
+                        {
+                            if (powerupActive[k] && i == powerupY[k] && j == powerupX[k])
+                            {
+                                color(14);   // Yellow color for power-ups
+                                cout << "-"; // Power-up symbol
+                                isPowerup = true;
+                                break;
+                            }
+                        }
+                        if (!isPowerup)
+                        {
+                            cout << " "; // Empty space
+                        }
+                    }
                 }
             }
             cout << endl;
         }
         color(6);
-        cout << "Score: " << max(0, snakeLength - 1) << endl;
-
-#else // For Linux (Using ncurses)
-        clear(); // Clear screen in Linux
+        cout << "Score: " << max(0, snakeLength - 3) << endl;
+#else
+        clear();
         color(5);
         mvprintw(0, 0, "Welcome to snake game!!");
         mvprintw(1, 0, "Use 'wasd' for controlling the snake and 'p' to pause");
@@ -224,10 +296,10 @@ public:
                     color(3);
                     mvprintw(i + 2, j, "*"); // Border
                 }
-                else if (i == snake_Y[0] && j == snake_X[0])
+                else if (i == head->y && j == head->x)
                 {
                     color(10);
-                    mvprintw(i + 2, j, "X"); // Snake head
+                    mvprintw(i + 2, j, "O"); // Snake head
                 }
                 else if ((i == fruitY1 && j == fruitX1) ||
                          (i == fruitY2 && j == fruitX2) ||
@@ -246,26 +318,43 @@ public:
                 else
                 {
                     bool isBodyPart = false;
-                    for (int k = 1; k < snakeLength; k++)
+                    node *temp = head->next;
+                    while (temp != NULL)
                     {
-                        if (snake_X[k] == j && snake_Y[k] == i)
+                        if (temp->x == j && temp->y == i)
                         {
                             color(10);
                             mvprintw(i + 2, j, "o"); // Snake body
                             isBodyPart = true;
                             break;
                         }
+                        temp = temp->next;
                     }
                     if (!isBodyPart)
-                        mvprintw(i + 2, j, " ");
+                    {
+                        // Draw power-ups
+                        bool isPowerup = false;
+                        for (int k = 0; k < 4; k++)
+                        {
+                            if (powerupActive[k] && i == powerupY[k] && j == powerupX[k])
+                            {
+                                color(14);               // Yellow color for power-ups
+                                mvprintw(i + 2, j, "$"); // Power-up symbol
+                                isPowerup = true;
+                                break;
+                            }
+                        }
+                        if (!isPowerup)
+                        {
+                            mvprintw(i + 2, j, " "); // Empty space
+                        }
+                    }
                 }
             }
         }
-
         color(6);
-        mvprintw(HEIGHT + 2, 0, "Score: %d", max(0, snakeLength - 1));
-
-        refresh(); // Refresh screen after drawing everything
+        mvprintw(HEIGHT + 2, 0, "Score: %d", max(0, snakeLength - 3));
+        refresh();
 #endif
     }
 
@@ -277,10 +366,10 @@ public:
             return _getch();
         }
 #else
-        int key = getch(); // Get the key press
+        int key = getch();
         if (key == ERR)
         {
-            return 0; // No key pressed
+            return 0;
         }
         return key;
 #endif
@@ -289,7 +378,6 @@ public:
 
     void Input()
     {
-
         char key = getKeyPress();
         if (key)
         {
@@ -303,11 +391,9 @@ public:
                     while (pause)
                     {
                         key = getKeyPress();
+                        if (key == 'p' || key == 'P')
                         {
-                            if (key == 'p' || key == 'P')
-                            {
-                                pause = false;
-                            }
+                            pause = false;
                         }
                     }
                 }
@@ -315,7 +401,6 @@ public:
 
             if (direction == ' ' && (key == 'w' || key == 's' || key == 'a' || key == 'd' || key == 'W' || key == 'S' || key == 'A' || key == 'D'))
             {
-                // Start moving once the first key is pressed
                 direction = key;
             }
             else if (((key == 'w' || key == 'W') && (direction != 's' && direction != 'S')) ||
@@ -330,182 +415,137 @@ public:
 
     void Logic(char difficulty)
     {
-        // Move the snake body
-        for (int i = snakeLength; i > 0; i--)
-        {
-            snake_X[i] = snake_X[i - 1];
-            snake_Y[i] = snake_Y[i - 1];
-        }
-
         // Move the snake head
+        node *newHead = new node;
+
         switch (direction)
         {
         case 'w':
-            snake_Y[0]--;
-            break;
         case 'W':
-            snake_Y[0]--;
+            newHead->y = head->y - 1;
+            newHead->x = head->x;
             break;
         case 's':
-            snake_Y[0]++;
-            break;
         case 'S':
-            snake_Y[0]++;
+            newHead->y = head->y + 1;
+            newHead->x = head->x;
             break;
         case 'a':
-            snake_X[0]--;
-            break;
         case 'A':
-            snake_X[0]--;
+            newHead->y = head->y;
+            newHead->x = head->x - 1;
             break;
         case 'd':
-            snake_X[0]++;
-            break;
         case 'D':
-            snake_X[0]++;
+            newHead->y = head->y;
+            newHead->x = head->x + 1;
             break;
         }
-
-        if (snakeLength <= 0)
-        {
-            gameOver = true;
-        }
-
-        // Check collision with walls
-        if (snake_X[0] == 0 || snake_X[0] == WIDTH - 1 || snake_Y[0] == 0 || snake_Y[0] == HEIGHT - 1)
-            gameOver = true;
-
-        // Check collision with itself
-        for (int i = 1; i < snakeLength; i++)
-        {
-            if (snake_X[0] == snake_X[i] && snake_Y[0] == snake_Y[i])
-                gameOver = true;
-        }
+        newHead->next = head;
+        head = newHead;
 
         // Check if the snake eats the fruit
-        if ((snake_X[0] == fruitX1 && snake_Y[0] == fruitY1) ||
-            (snake_X[0] == fruitX2 && snake_Y[0] == fruitY2) ||
-            (snake_X[0] == fruitX3 && snake_Y[0] == fruitY3))
+        if ((head->x == fruitX1 && head->y == fruitY1) ||
+            (head->x == fruitX2 && head->y == fruitY2) ||
+            (head->x == fruitX3 && head->y == fruitY3))
         {
             snakeLength++;
-            if (snake_X[0] == fruitX1 && snake_Y[0] == fruitY1)
+
+            if (head->x == fruitX1 && head->y == fruitY1)
             {
                 fruitX1 = rand() % (WIDTH - 4) + 2;
                 fruitY1 = rand() % (HEIGHT - 4) + 2;
             }
-            if (snake_X[0] == fruitX2 && snake_Y[0] == fruitY2)
+            if (head->x == fruitX2 && head->y == fruitY2)
             {
                 fruitX2 = rand() % (WIDTH - 4) + 2;
                 fruitY2 = rand() % (HEIGHT - 4) + 2;
             }
-            if (snake_X[0] == fruitX3 && snake_Y[0] == fruitY3)
+            if (head->x == fruitX3 && head->y == fruitY3)
             {
                 fruitX3 = rand() % (WIDTH - 4) + 2;
                 fruitY3 = rand() % (HEIGHT - 4) + 2;
             }
         }
+        else
+        {
+            // Remove the tail
+            node *temp = head;
+            while (temp->next != NULL && temp->next->next != NULL)
+            {
+                temp = temp->next;
+            }
+            delete temp->next;
+            temp->next = NULL;
+        }
+
+        if (snakeLength - 3 < 0)
+        {
+            cout << "Score negative" << endl;
+            gameOver = true;
+        }
 
         if (difficulty == '3')
         {
-            if ((snake_X[0] == obstacleX1 && snake_Y[0] == obstacleY1) ||
-                (snake_X[0] == obstacleX2 && snake_Y[0] == obstacleY2) ||
-                (snake_X[0] == obstacleX3 && snake_Y[0] == obstacleY3))
+            if ((head->x == obstacleX1 && head->y == obstacleY1) ||
+                (head->x == obstacleX2 && head->y == obstacleY2) ||
+                (head->x == obstacleX3 && head->y == obstacleY3))
             {
                 gameOver = true;
             }
         }
 
+        // Check collision with walls
+        if (head->x == 0 || head->x == WIDTH - 1 || head->y == 0 || head->y == HEIGHT - 1)
+            gameOver = true;
+
+        // Check collision with itself
+        node *curr = head->next;
+        while (curr != NULL)
+        {
+            if (head->x == curr->x && head->y == curr->y)
+            {
+                gameOver = true;
+                break;
+            }
+            curr = curr->next;
+        }
+
         // Power-up mechanics
-        if (powerup1_timer <= 0 && powerup1 == false)
+        for (int i = 0; i < 4; i++)
         {
-            powerup1X = rand() % (WIDTH - 4) + 2;
-            powerup1Y = rand() % (HEIGHT - 4) + 2;
-            powerup1 = true;
-            powerup1_duration = 4500;
-            powerup1_timer = rand() % 15 + 30; // Reset spawn timer
-        }
-        if (powerup2_timer <= 0 && powerup2 == false)
-        {
-            powerup2X = rand() % (WIDTH - 4) + 2;
-            powerup2Y = rand() % (HEIGHT - 4) + 2;
-            powerup2 = true;
-            powerup2_duration = 4500;
-            powerup2_timer = rand() % 15 + 10; // Reset spawn timer
-        }
-        if (powerup3_timer <= 0 && powerup3 == false)
-        {
-            powerup3X = rand() % (WIDTH - 4) + 2;
-            powerup3Y = rand() % (HEIGHT - 4) + 2;
-            powerup3 = true;
-            powerup3_duration = 4500;
-            powerup3_timer = rand() % 15 + 12; // Reset spawn timer
-        }
-        if (powerup4_timer <= 0 && powerup4 == false)
-        {
-            powerup4X = rand() % (WIDTH - 4) + 2;
-            powerup4Y = rand() % (HEIGHT - 4) + 2;
-            powerup4 = true;
-            powerup4_duration = 4500;
-            powerup4_timer = rand() % 15 + 14; // Reset spawn timer
-        }
+            if (powerupTimer[i] <= 0 && !powerupActive[i])
+            {
+                powerupX[i] = rand() % (WIDTH - 4) + 2;
+                powerupY[i] = rand() % (HEIGHT - 4) + 2;
+                powerupActive[i] = true;
+                powerupDuration[i] = 4500;
+                powerupTimer[i] = rand() % 15 + 10;
+            }
 
-        if (powerup1 == true)
-        {
-            powerup1_duration = powerup1_duration - 100;
-            if (powerup1_duration <= 0)
+            if (powerupActive[i])
             {
-                powerup1 = false; // Remove power-up from screen
+                powerupDuration[i] -= 100;
+                if (powerupDuration[i] <= 0)
+                {
+                    powerupActive[i] = false;
+                }
             }
-        }
-        if (powerup2 == true)
-        {
-            powerup2_duration = powerup2_duration - 100;
-            if (powerup2_duration <= 0)
-            {
-                powerup2 = false; // Remove power-up from screen
-            }
-        }
-        if (powerup3 == true)
-        {
-            powerup3_duration = powerup3_duration - 100;
-            if (powerup3_duration <= 0)
-            {
-                powerup3 = false; // Remove power-up from screen
-            }
-        }
-        if (powerup4 == true)
-        {
-            powerup4_duration = powerup4_duration - 100;
-            if (powerup4_duration <= 0)
-            {
-                powerup4 = false; // Remove power-up from screen
-            }
-        }
 
-        if (powerup1 == true && snake_X[0] == powerup1X && snake_Y[0] == powerup1Y)
-        {
-            snakeLength += 3; // Increase score by 3
-            powerup1 = false; // Remove power-up
+            if (powerupActive[i] && head->x == powerupX[i] && head->y == powerupY[i])
+            {
+                if (i == 0)
+                {
+                    snakeLength += 3; // Positive power-up
+                }
+                else
+                {
+                    snakeLength -= 1; // Negative power-up
+                }
+                powerupActive[i] = false;
+            }
+            powerupTimer[i]--;
         }
-        powerup1_timer--;
-        if (powerup2 == true && snake_X[0] == powerup2X && snake_Y[0] == powerup2Y)
-        {
-            snakeLength -= 1;
-            powerup2 = false; // Remove power-up
-        }
-        powerup2_timer--;
-        if (powerup3 == true && snake_X[0] == powerup3X && snake_Y[0] == powerup3Y)
-        {
-            snakeLength -= 1;
-            powerup3 = false; // Remove power-up
-        }
-        powerup3_timer--;
-        if (powerup4 == true && snake_X[0] == powerup4X && snake_Y[0] == powerup4Y)
-        {
-            snakeLength -= 1;
-            powerup4 = false; // Remove power-up
-        }
-        powerup4_timer--;
     }
 
     void Run(char d)
@@ -536,7 +576,7 @@ public:
         cout << "Game Over!" << endl;
         color(7);
 
-        // restart
+        // Restart
         char restart;
         color(2);
         do
