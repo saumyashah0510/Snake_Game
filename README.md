@@ -24,7 +24,7 @@ This is a terminal based snake game implemented in C++. It features different le
 
 - **OS Independent:**
     - Works on both Windows and Linux\MacOS.
-    - Colours are only displayed in Windows.
+    - Colours and background music are only displayed in Windows.
 
 - **Multiple Game Modes:**
     - Easy (Slow Speed)
@@ -114,6 +114,9 @@ This is a terminal based snake game implemented in C++. It features different le
 6. **If the snake collides** with itself or an obstacle (in Hard mode), the game ends.
 7. **If your score goes below 0, the game ends.**
 7. **After Game Over, restart or exit**.
+
+## Music Used:
+"https://github.com/saumyashah0510/Snake_Game/blob/main/modular_final_code/sample-15s.wav"
 
 ## License:
 This project is open-source and can be modified as needed.
