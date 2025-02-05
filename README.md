@@ -75,7 +75,7 @@ This is a terminal based snake game implemented in C++. It features different le
 2. **Navigate to the path where file is located**
 3. **Compile the code using**:<br>
     ```sh 
-    g++ my_version.cpp -o my_version.exe
+    g++ my_version.cpp -o my_version.exe -lwinmm
 4. **Run the game**
     ```sh
     my_version.exe    

@@ -5,6 +5,8 @@
 #if defined(_WIN32) || defined(_WIN64) // Windows-specific includes
 #include <conio.h>
 #include <windows.h> // For Sleep()
+#include <mmsystem.h>
+#pragma comment(lib, "winmm.lib")
 #define sleep_for(milliseconds) Sleep(milliseconds)
 #else // Linux/macOS includes
 #include <ncurses.h>
@@ -583,6 +585,7 @@ public:
         }
         color(9);
         cout << "Game Over!" << endl;
+        cout << "Your final score was " << snakeLength-3 << endl;
         color(7);
 
         // Restart
@@ -590,11 +593,13 @@ public:
         color(2);
         do
         {
+            PlaySound(0,0,0);
             cout << "Do you want to play again?" << endl
                  << "Press 'y' to play again and 'n' to exit" << endl;
             cin >> restart;
             if (restart == 'y' || restart == 'Y')
             {
+                PlaySound (TEXT("sample-15s.wav"), NULL, SND_ASYNC | SND_LOOP);
                 Initialize(d);
                 Run(d);
             }
@@ -616,6 +621,9 @@ public:
 
 int main()
 {
+
+    PlaySound (TEXT("sample-15s.wav"), NULL, SND_ASYNC | SND_LOOP);
+
     char difficulty;
 
     do
