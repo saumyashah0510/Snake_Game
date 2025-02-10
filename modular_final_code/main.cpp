@@ -5,6 +5,7 @@ int main()
     char difficulty;
     do
     {
+        system("cls");
         std::cout << "Choose Difficulty: " << std::endl;
         std::cout << "1. Easy" << std::endl
                   << "2. Medium" << std::endl

@@ -54,6 +54,8 @@ public:
     void Run(char difficulty);
     void clearScreen();
     void color(int c);
+    void refreshScreen();
+    void cleanup();
     void PlaySound(const char *soundFile);
 };
 

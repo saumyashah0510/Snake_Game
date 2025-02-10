@@ -31,21 +31,18 @@ char SnakeGame::getKeyPress()
     return 0;
 }
 
-void SnakeGame::clearScreen()
-{
-#if defined(_WIN32) || defined(_WIN64)
-    system("cls");
-#else
-    clear();
-#endif
-}
-
-void SnakeGame::color(int c)
-{
-#if defined(_WIN32) || defined(_WIN64)
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), c);
-#else
-    attron(COLOR_PAIR(c));
-#endif
-}
-
+void SnakeGame::clearScreen() {
+    #if defined(_WIN32) || defined(_WIN64)
+        system("cls");
+    #else
+        clear(); // Use ncurses clear function
+    #endif
+    }
+    
+    void SnakeGame::color(int c) {
+    #if defined(_WIN32) || defined(_WIN64)
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), c);
+    #else
+        attron(COLOR_PAIR(c)); // Use ncurses color function
+    #endif
+    }

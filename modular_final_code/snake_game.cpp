@@ -51,56 +51,46 @@ void SnakeGame::Initialize(char d)
     srand(time(0)); // Random positions every run
 
     // Random fruit positions
-    // Generate the first obstacle
     fruitX1 = rand() % (WIDTH - 4) + 2;
     fruitY1 = rand() % (HEIGHT - 4) + 2;
-    // Ensure obstacle is not near the snake's starting area
     while (abs(fruitX1 - WIDTH / 2) < 3 && abs(fruitY1 - HEIGHT / 2) < 3)
     {
         fruitX1 = rand() % (WIDTH - 4) + 2;
         fruitY1 = rand() % (HEIGHT - 4) + 2;
     }
 
-    // Generate the second obstacle
     fruitX2 = rand() % (WIDTH - 4) + 2;
     fruitY2 = rand() % (HEIGHT - 4) + 2;
-    // Ensure the second obstacle is not near the snake's starting area and also not too close to the first one
     while ((abs(fruitX2 - WIDTH / 2) < 3 && abs(fruitY2 - HEIGHT / 2) < 3) ||
-           (abs(fruitX2 - obstacleX1) < 3 && abs(fruitY2 - obstacleY1) < 3))
+           (abs(fruitX2 - fruitX1) < 3 && abs(fruitY2 - fruitY1) < 3))
     {
         fruitX2 = rand() % (WIDTH - 4) + 2;
         fruitY2 = rand() % (HEIGHT - 4) + 2;
     }
 
-    // Generate the third obstacle
     fruitX3 = rand() % (WIDTH - 4) + 2;
     fruitY3 = rand() % (HEIGHT - 4) + 2;
-    // Ensure the third obstacle is not near the snake's starting area and not too close to the other obstacles
     while ((abs(fruitX3 - WIDTH / 2) < 3 && abs(fruitY3 - HEIGHT / 2) < 3) ||
-           (abs(fruitX3 - obstacleX1) < 3 && abs(fruitY3 - obstacleY1) < 3) ||
-           (abs(fruitX3 - obstacleX2) < 3 && abs(fruitY3 - obstacleY2) < 3))
+           (abs(fruitX3 - fruitX1) < 3 && abs(fruitY3 - fruitY1) < 3) ||
+           (abs(fruitX3 - fruitX2) < 3 && abs(fruitY3 - fruitY2) < 3))
     {
         fruitX3 = rand() % (WIDTH - 4) + 2;
         fruitY3 = rand() % (HEIGHT - 4) + 2;
     }
 
     // Avoid placing obstacles near the snake
-    if (d == '3') // Hard mode with obstacles
-    {
-        // Generate the first obstacle
+    if (d == '3')
+    { // Hard mode with obstacles
         obstacleX1 = rand() % (WIDTH - 4) + 2;
         obstacleY1 = rand() % (HEIGHT - 4) + 2;
-        // Ensure obstacle is not near the snake's starting area
         while (abs(obstacleX1 - WIDTH / 2) < 3 && abs(obstacleY1 - HEIGHT / 2) < 3)
         {
             obstacleX1 = rand() % (WIDTH - 4) + 2;
             obstacleY1 = rand() % (HEIGHT - 4) + 2;
         }
 
-        // Generate the second obstacle
         obstacleX2 = rand() % (WIDTH - 4) + 2;
         obstacleY2 = rand() % (HEIGHT - 4) + 2;
-        // Ensure the second obstacle is not near the snake's starting area and also not too close to the first one
         while ((abs(obstacleX2 - WIDTH / 2) < 3 && abs(obstacleY2 - HEIGHT / 2) < 3) ||
                (abs(obstacleX2 - obstacleX1) < 3 && abs(obstacleY2 - obstacleY1) < 3))
         {
@@ -108,10 +98,8 @@ void SnakeGame::Initialize(char d)
             obstacleY2 = rand() % (HEIGHT - 4) + 2;
         }
 
-        // Generate the third obstacle
         obstacleX3 = rand() % (WIDTH - 4) + 2;
         obstacleY3 = rand() % (HEIGHT - 4) + 2;
-        // Ensure the third obstacle is not near the snake's starting area and not too close to the other obstacles
         while ((abs(obstacleX3 - WIDTH / 2) < 3 && abs(obstacleY3 - HEIGHT / 2) < 3) ||
                (abs(obstacleX3 - obstacleX1) < 3 && abs(obstacleY3 - obstacleY1) < 3) ||
                (abs(obstacleX3 - obstacleX2) < 3 && abs(obstacleY3 - obstacleY2) < 3))
@@ -142,4 +130,23 @@ void SnakeGame::Initialize(char d)
 #endif
 }
 
+void SnakeGame::refreshScreen()
+{
+#if defined(_WIN32) || defined(_WIN64)
+    // Move the cursor to the top-left corner instead of clearing the screen
+    COORD coord;
+    coord.X = 0;
+    coord.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+#else
+    // Use ncurses to refresh the screen
+    refresh();
+#endif
+}
 
+void SnakeGame::cleanup()
+{
+#if !defined(_WIN32) && !defined(_WIN64)
+    endwin(); // Clean up ncurses
+#endif
+}

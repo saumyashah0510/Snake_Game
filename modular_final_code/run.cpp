@@ -20,31 +20,36 @@ void SnakeGame::Run(char d)
     {
         if (!pause)
         {
-            Grid();
-            Input();
-            Logic(d);
+            Grid();          // Draw the grid
+            refreshScreen(); // Refresh the screen without clearing it
+            Input();         // Handle input
+            Logic(d);        // Update game logic
         }
 
+        // Add a small delay based on difficulty
         if (d == '1')
         {
-            sleep_for(200);
+            sleep_for(200); // Easy: 200ms delay
         }
         else if (d == '2')
         {
-            sleep_for(100);
+            sleep_for(100); // Medium: 100ms delay
         }
         else if (d == '3')
         {
-            sleep_for(30);
+            sleep_for(30); // Hard: 30ms delay
         }
     }
+
+    // Game over message
+    system("cls");
     color(9);
     cout << "Game Over!" << endl;
     cout << "Your final score was " << max(0, snakeLength - 3) << endl;
     cout << "High score: " << high_score << endl;
     color(7);
 
-    // Restart
+    // Restart logic
     char restart;
     color(2);
     do
@@ -69,7 +74,5 @@ void SnakeGame::Run(char d)
         }
     } while (restart != 'y' && restart != 'n' && restart != 'Y' && restart != 'N');
 
-#if !defined(_WIN32) && !defined(_WIN64)
-    endwin();
-#endif
+    cleanup(); // Clean up resources
 }
