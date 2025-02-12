@@ -59,4 +59,4 @@ public:
     void PlaySound(const char *soundFile);
 };
 
-#endif // SNAKE_GAME_H
+#endif
